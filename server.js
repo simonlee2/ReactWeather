@@ -23,7 +23,6 @@ function requestWeatherInfo(dataid) {
             accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.'
         }
     };
-
     return rp(options)
             .then(parseXML);
 }
@@ -117,7 +116,7 @@ app.get('/api/locations', (req, res) => {
     request36Forecast()
         .then(namesFromForecast)
         .then( (names) => {
-            res.send(names);
+            res.send(JSON.parse(JSON.stringify(names)));
         })
         .catch( (err) => {
             console.log(err);
@@ -137,7 +136,7 @@ app.get('/api/:location/thirtysix/:elementName', (req, res) => {
         })
         .then( (elements) => {
             const element = filterForElement(elements, req.params.elementName);
-            res.send(element);
+            res.send(JSON.parse(element));
         })
         .catch( (err) => {
             console.log(err);
@@ -157,7 +156,7 @@ app.get('/api/:location/week/:elementName', (req, res) => {
         })
         .then( (elements) => {
             const element = filterForElement(elements, req.params.elementName);
-            res.send(element);
+            res.send(JSON.parse(element));
         })
         .catch( (err) => {
             console.log(err);
