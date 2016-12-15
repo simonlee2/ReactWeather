@@ -3,9 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 
 function List(props) {
+  const { list } = props;
+  // console.log(list);
   return (
     <ul>
-      {props.list.map( (value, index) => {
+      {list.map( (value, index) => {
         return <li key={index} > {value} </li>;
       })}
     </ul>
@@ -13,19 +15,40 @@ function List(props) {
 }
 
 class App extends Component {
-  render() {
-    fetch("/api/locations")
-    .then( (response) => {
-      console.log(response.json());
-    });
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      locations: null
+    }
+  }
+
+  componentDidMount() {
+    this.fetchLocations();
+  }
+
+  setStateLocations(locations) {
+    this.setState({ locations });
+  }
+
+  fetchLocations() {
+    fetch("/api/locations")
+      .then( (response) => {
+        return response.json().then( (json) => {
+          this.setStateLocations(json);
+        });
+      });
+  }
+
+  render() {
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <List list={[1, 2, 3, 4, 5]} />
+        { this.state.locations ? <List list={this.state.locations} /> : null }
       </div>
     );
   }
