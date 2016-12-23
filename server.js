@@ -126,6 +126,24 @@ app.get('/api/locations', (req, res) => {
 
 /**
     :location - See above /api/locations
+*/
+app.get('/api/:location/thirtysix', (req, res) => {
+    request36Forecast()
+        .then(locationsFromForecast)
+        .then( (locations) => {
+            return filterForLocation(locations, req.params.location);
+        })
+        .then( (json) => {
+            res.send(JSON.parse(JSON.stringify(json)));
+        })
+        .catch( (err) => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
+/**
+    :location - See above /api/locations
     :elementName - Wx, MaxT, MinT, CI, PoP
 */
 app.get('/api/:location/thirtysix/:elementName', (req, res) => {
@@ -136,7 +154,7 @@ app.get('/api/:location/thirtysix/:elementName', (req, res) => {
         })
         .then( (elements) => {
             const element = filterForElement(elements, req.params.elementName);
-            res.send(JSON.parse(element));
+            res.send(JSON.parse(JSON.stringify(element)));
         })
         .catch( (err) => {
             console.log(err);
